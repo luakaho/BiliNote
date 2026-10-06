@@ -1,0 +1,45 @@
+name: Build ARM64 BiliNote Images
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend ARM64
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          platforms: linux/arm64
+          tags: bilinote-backend:latest
+          outputs: type=docker,dest=/tmp/bilinote-backend.tar
+
+      - name: Build frontend ARM64
+        uses: docker/build-push-action@v5
+        with:
+          context: ./BillNote_frontend
+          platforms: linux/arm64
+          tags: bilinote-frontend:latest
+          outputs: type=docker,dest=/tmp/bilinote-frontend.tar
+
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bilinote-backend-arm64
+          path: /tmp/bilinote-backend.tar
+
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bilinote-frontend-arm64
+          path: /tmp/bilinote-frontend.tar
