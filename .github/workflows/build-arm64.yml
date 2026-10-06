@@ -27,7 +27,7 @@ jobs:
       - name: Build frontend ARM64
         uses: docker/build-push-action@v5
         with:
-          context: ./BillNote_frontend
+          context: ./BiliNote_frontend
           platforms: linux/arm64
           tags: bilinote-frontend:latest
           outputs: type=docker,dest=/tmp/bilinote-frontend.tar
